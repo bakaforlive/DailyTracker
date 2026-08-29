@@ -1,8 +1,10 @@
 import json
 import os
+import sys
 from dotenv import load_dotenv
 import google.genai as genai
 from google.genai import types
+from google.genai import errors
 
 load_dotenv()
 
@@ -40,7 +42,7 @@ def generate_punishment(unfinished) -> str:
         print(f"Details: {err.message} (Status Code: {err.code})", file=sys.stderr)
         return "Fallback: Go do 15 jumping jacks right now. (AI is offline)"
 
-    except Exception as e:
+    except Exception as err:
         print(f"[System Error] Something went wrong locally: {err}", file=sys.stderr)
         return "Fallback: Clean your desk for 2 minutes. (Local connection failure)"
 
