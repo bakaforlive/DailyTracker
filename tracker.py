@@ -18,7 +18,7 @@ def ask_user(routine) -> list:
         if answer not in ["y", "n"]:
             raise SystemExit("Incorrect input. Exiting...")
         if answer == "n":
-            unfinished.append(i)
+            unfinished.append(routine[i])
     return unfinished
 
 def generate_punishment(unfinished) -> string:
@@ -28,9 +28,6 @@ def generate_punishment(unfinished) -> string:
         "and non-brutal punishment/chore. Never suggest physical harm, dangerous tasks, "
         "or cold showers. Keep it under 4 sentences."
     )
-
-    # !!!
-    print(f"I failed my routine: I didn't do these: {unfinished}.")
 
     chat = client.chats.create(
         model='gemini-3.6-flash',
@@ -45,8 +42,11 @@ def generate_punishment(unfinished) -> string:
 
 unfinished = ask_user(routine)
 if unfinished:
-    print(f"Unfinished routines: {len(unfinished)}:")
-    for i in unfinished:
-        print(f"{i + 1}: {routine[i]}")
+    print(f"Unfinished routines: {len(unfinished)}")
+    for i in range(len(unfinished)):
+         print(f"{i + 1}: {unfinished[i]}")
+
+    print("Generating punishment...")
+    print(generate_punishment(unfinished))
 else:
     print("No unfinished routines. Good Job!")
