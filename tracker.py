@@ -5,23 +5,23 @@ import google.genai as genai
 from google.genai import types
 
 load_dotenv()
-client = genai.Client()
-
-routine = ["clean your face", "brush your teeth", "do exercise"]
 
 def ask_user(routine) -> list:
     unfinished = []
     for i in range(len(routine)):
-        print(f"Did you {routine[i]}? [y/n]")
-        answer = input().lower().strip()
+        while True:
+            print(f"Did you {routine[i]}? [y/n]")
+            answer = input().lower().strip()
 
-        if answer not in ["y", "n"]:
-            raise SystemExit("Incorrect input. Exiting...")
+            if answer in ["y", "n"]:
+                break
+
         if answer == "n":
             unfinished.append(routine[i])
     return unfinished
 
-def generate_punishment(unfinished) -> string:
+def generate_punishment(unfinished) -> str:
+    client = genai.Client()
     system_prompt = (
         "You are 'The Habit Warden,' a witty, slightly sassy AI accountability coach. "
         "The user has failed to complete a routine task. Assign them a minor, funny, "
@@ -45,6 +45,8 @@ def generate_punishment(unfinished) -> string:
 
     response = chat.send_message(f"I failed my routine: I didn't do these: {unfinished}.")
     return response.text
+
+routine = ["clean your face", "brush your teeth", "do exercise"]
 
 unfinished = ask_user(routine)
 if unfinished:
