@@ -26,7 +26,7 @@ Fedora/RHEL
 $ sudo dnf install python
 ```
 ## Installation
-
+Clone the repo and install project dependencies:
 ```bash
 git clone https://github.com/bakaforlive/DailyTracker.git
 cd DailyTracker
@@ -35,6 +35,23 @@ python -m venv .venv
 source .venv/bin/activate
 
 pip install -r requirements.txt
+```
+## Configuration
+This app requires a Google Gemini API key to generate accountability punishments.
+### 1. Get an API Key
+* Visit [Google AI Studio](https://aistudio.google.com/apikey).
+* Login into your Google account.
+* Click "Create API key" and create your API key.
+### 2. Create an environment variable
+* In app's directory create .env file:
+```bash
+$ touch .env
+```
+* Then, open it with your text editor.
+
+* Paste to this file:
+```text
+GEMINI_API_KEY=your_api_key_here
 ```
 
 ## Usage
