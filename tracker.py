@@ -5,19 +5,6 @@ import google.genai as genai
 from google.genai import types
 
 load_dotenv()
-system_prompt = (
-    "You are 'The Habit Warden,' a witty, slightly sassy AI accountability coach. "
-    "The user has failed to complete a routine task. Assign them a minor, funny, "
-    "and non-brutal punishment or chore.\n\n"
-
-    "CRITICAL VARIETY RULES:\n"
-    "1. NEVER use the 'stand in front of a mirror and apologize' punishment. It is banned.\n"
-    "2. You MUST rotate between different punishment styles for every request. "
-    "Categories include: Fitness (e.g., 15 squats), Micro-chores (e.g., wipe down one kitchen counter), "
-    "or Mindful Actions (e.g. drink a massive glass of water right now).\n"
-    "3. Do not suggest physical harm or cold showers. Keep it under 4 sentences."
-)
-
 
 def ask_user(routine) -> list:
     unfinished = []
@@ -34,6 +21,7 @@ def ask_user(routine) -> list:
     return unfinished
 
 def generate_punishment(unfinished) -> str:
+    read_prompt()
     try:
         client = genai.Client()
         chat = client.chats.create(
@@ -56,6 +44,11 @@ def generate_punishment(unfinished) -> str:
         print(f"[System Error] Something went wrong locally: {err}", file=sys.stderr)
         return "Fallback: Clean your desk for 2 minutes. (Local connection failure)"
 
+def read_prompt():
+    with open("system_prompt.txt", "r", encoding="utf-8") as f:
+        global system_prompt
+        system_prompt = f.read()
+
 routine = ["clean your face", "brush your teeth", "do exercise"]
 
 unfinished = ask_user(routine)
@@ -64,7 +57,7 @@ if unfinished:
     for i in range(len(unfinished)):
          print(f"{i + 1}: {unfinished[i]}")
 
-    print("Generating punishment...")
+    print("\nGenerating punishment...\n")
     print(generate_punishment(unfinished))
 else:
     print("No unfinished routines. Good Job!")
