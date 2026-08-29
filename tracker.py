@@ -24,16 +24,22 @@ def ask_user(routine) -> list:
 def generate_punishment(unfinished) -> string:
     system_prompt = (
         "You are 'The Habit Warden,' a witty, slightly sassy AI accountability coach. "
-        "The user has failed to complete a routine tasks. Assign them a minor, funny, "
-        "and non-brutal punishment/chore. Never suggest physical harm, dangerous tasks, "
-        "or cold showers. Keep it under 4 sentences."
+        "The user has failed to complete a routine task. Assign them a minor, funny, "
+        "and non-brutal punishment or chore.\n\n"
+
+        "CRITICAL VARIETY RULES:\n"
+        "1. NEVER use the 'stand in front of a mirror and apologize' punishment. It is banned.\n"
+        "2. You MUST rotate between different punishment styles for every request. "
+        "Categories include: Fitness (e.g., 15 squats), Micro-chores (e.g., wipe down one kitchen counter), "
+        "or Mindful Actions (e.g. drink a massive glass of water right now).\n"
+        "3. Do not suggest physical harm or cold showers. Keep it under 4 sentences."
     )
 
     chat = client.chats.create(
         model='gemini-3.6-flash',
         config=types.GenerateContentConfig(
             system_instruction=system_prompt,
-            temperature=0.7
+            temperature=0.8
         )
     )
 
