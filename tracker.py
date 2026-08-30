@@ -8,7 +8,63 @@ from google.genai import errors
 
 load_dotenv()
 
-def ask_user(routine) -> list:
+def add_routine(routine):
+    if len(sys.argv) < 3:
+        print("Need to specify routine.")
+        sys.exit()
+
+    if os.path.exists(routine_file) and os.path.getsize(routine_file) > 0:
+        with open(routine_file, "r") as f:
+            routine = json.load(f)
+    else:
+        routine = []
+
+    routine.append(sys.argv[2])
+
+    with open(routine_file, "w") as f:
+        json.dump(routine, f)
+
+def delete_routine(routine):
+    if len(sys.argv) < 3:
+        print("Need to specify routine.")
+        sys.exit()
+
+    if os.path.exists(routine_file) and os.path.getsize(routine_file) > 0:
+        with open(routine_file, "r") as f:
+            routine = json.load(f)
+    else:
+        routine = []
+
+    if sys.argv[2] in routine:
+        routine.remove(sys.argv[2])
+    else:
+        print(f"Routine '{sys.argv[2]}' was not found.")
+        sys.exit()
+
+    with open(routine_file, "w") as f:
+        json.dump(routine, f)
+
+
+def list_routines(routine):
+    with open(routine_file, "r") as f:
+        routine = json.load(f)
+
+    for i in range(len(routine)):
+        print(f"{i + 1}: {routine[i]}")
+
+def checkArgs():
+    match sys.argv[1]:
+        case "--add" | "-a":
+            add_routine(routine)
+        case "--delete" | "-d":
+            delete_routine(routine)
+        case "--list" | "-l":
+            list_routines(routine)
+        case _:
+            print(f"Flag '{sys.argv[1]}' not found.")
+    SystemExit
+
+def ask_user(routine) -> list[str]:
     unfinished = []
     for i in range(len(routine)):
         while True:
@@ -51,7 +107,15 @@ def read_prompt():
         global system_prompt
         system_prompt = f.read()
 
-routine = ["clean your face", "brush your teeth", "do exercise"]
+routine_file = "routines.json"
+routine = []
+
+if len(sys.argv) > 1:
+    checkArgs()
+    sys.exit()
+
+with open(routine_file, "r") as f:
+    routine = json.load(f)
 
 unfinished = ask_user(routine)
 if unfinished:
