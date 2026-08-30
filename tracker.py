@@ -8,6 +8,13 @@ from google.genai import errors
 
 load_dotenv()
 
+def print_help_docs():
+    print("Usage: python tracker.py [optional flags]\n")
+    print("Flags:")
+    print("-a, --add : Add routine to JSON file.")
+    print("-d, --delete : Delete routine from JSON file by name")
+    print("-l, --list : print all routines in JSON file.")
+
 def add_routine(routine):
     if len(sys.argv) < 3:
         print("Need to specify routine.")
@@ -54,6 +61,8 @@ def list_routines(routine):
 
 def checkArgs():
     match sys.argv[1]:
+        case "--help" | "-h":
+            print_help_docs()
         case "--add" | "-a":
             add_routine(routine)
         case "--delete" | "-d":
