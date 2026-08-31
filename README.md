@@ -68,6 +68,7 @@ You can use flags to manipulate your routines:
 * -a, --add - adds new routine to list.
 * -d, --delete - deletes routine by name.
 * -l, --list - prints all current routines.
+* -v, --version - prints current app version.
 
 Example:
 ```bash
