@@ -6,6 +6,8 @@ import google.genai as genai
 from google.genai import types
 from google.genai import errors
 
+__version__ = "1.0.0"
+
 load_dotenv()
 
 def print_help_docs():
@@ -14,6 +16,9 @@ def print_help_docs():
     print("-a, --add : Add routine to JSON file.")
     print("-d, --delete : Delete routine from JSON file by name")
     print("-l, --list : print all routines in JSON file.")
+
+def print_version():
+    print("DailyTracker", __version__)
 
 def add_routine(routine):
     if len(sys.argv) < 3:
@@ -61,6 +66,8 @@ def list_routines(routine):
 
 def checkArgs():
     match sys.argv[1]:
+        case "--version" | "-v":
+            print_version()
         case "--help" | "-h":
             print_help_docs()
         case "--add" | "-a":
