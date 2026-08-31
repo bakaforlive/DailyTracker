@@ -6,7 +6,7 @@ import google.genai as genai
 from google.genai import types
 from google.genai import errors
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 load_dotenv()
 
@@ -112,26 +112,33 @@ def generate_punishment(unfinished) -> str:
         # Handles Google API problems: Bad API keys, Rate limits, Model errors
         print(f"[AI Error] Google AI Studio rejected the request.", file=sys.stderr)
         print(f"Details: {err.message} (Status Code: {err.code})", file=sys.stderr)
-        return "Fallback: Go do 15 jumping jacks right now. (AI is offline)"
 
     except Exception as err:
         print(f"[System Error] Something went wrong locally: {err}", file=sys.stderr)
-        return "Fallback: Clean your desk for 2 minutes. (Local connection failure)"
 
 def read_prompt():
-    with open("system_prompt.txt", "r", encoding="utf-8") as f:
-        global system_prompt
-        system_prompt = f.read()
+    try:
+        with open(sysprompt_file, "r", encoding="utf-8") as f:
+            global system_prompt
+            system_prompt = f.read()
+    except Exception as err:
+        print(f"Something went wrong with reading system prompt: {err}")
+        sys.exit()
 
 routine_file = "routines.json"
+sysprompt_file = "system_prompt.txt"
 routine = []
 
 if len(sys.argv) > 1:
     checkArgs()
     sys.exit()
 
-with open(routine_file, "r") as f:
-    routine = json.load(f)
+try:
+    with open(routine_file, "r") as f:
+        routine = json.load(f)
+except Exception as err:
+    print(f"Something went wrong with opening {routine_file}: {err}")
+    sys.exit()
 
 unfinished = ask_user(routine)
 if unfinished:
